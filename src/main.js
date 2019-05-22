@@ -1,12 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
-import axios from 'axios';
 import router from './router'
+import Element from 'element-ui';
+
+import axios, { getTemp } from './axios/index'
+Vue.use(Element);
 
 Vue.config.productionTip = false;
-Vue.prototype.axios = axios;
+
+Vue.prototype.$http = axios;
 
 new Vue({
-  render: h => h(App),
-  router
+    render: h => h(App),
+    router
 }).$mount('#app')
