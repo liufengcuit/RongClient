@@ -7,8 +7,10 @@
             <el-form-item label="密码"> -->
                 <el-input v-model="form.password"></el-input>
             <!-- </el-form-item> -->
-            <el-button @click="register()">注册</el-button>
+            <el-button @click="login()">注册</el-button>
         </el-form>
+
+        <el-button @click="verify()">验证token</el-button>
     </div>
 </template>
 <script>
@@ -21,18 +23,21 @@
             }
         },
         created() {
-            this.login();
+//            this.login();
         },
         methods: {
             login() {
-                this.$http.get('http://127.0.0.1:8090/login')
-                .then(res=>{
-                    console.log(res)
-                    initSdk("cpj2xarlctw0n", res.token)
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                if(!localStorage.getItem('token')) {
+                    this.$http.post('http://127.0.0.1:8090/login')
+                    .then(res=>{
+                        console.log(res)
+                        localStorage.setItem("token", res.token)
+                        // initSdk("cpj2xarlctw0n", res.token)
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }
             },
             register() {
                 console.log(this.form)
@@ -43,6 +48,17 @@
                 .catch(err => {
                     console.log(err)
                 })
+            },
+            verify() {
+                this.$http.post('http://127.0.0.1:8090/verify', {
+                    token: localStorage.getItem('token')
+                })
+                    .then(res=>{
+                        console.log(res)
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
             }
         }
     }
